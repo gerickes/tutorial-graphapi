@@ -18,6 +18,13 @@ param (
     [https://<Tenant>.sharepoint.com/]
 
   .NOTES
+    Version:          1.0.1
+    Author:           Stefan Gericke - stefan@gericke.cloud
+    Creation Date:    2021/05/10
+    Description:      - Use Get-Credential
+                      - Issue: Get access token from response
+                      - Issue: other
+
     Version:          1.0
     Author:           Stefan Gericke - stefan@gericke.cloud
     Creation Date:    2021/05/08
@@ -76,7 +83,7 @@ catch {
 if ($tokenResponse.access_token) { # access token is available
 
     # Create header for using Graph API
-    $graphApiHeader = @{ Authorization = "Bearer $tokenResponse.access_token" }
+    $graphApiHeader = @{ Authorization = "Bearer $($tokenResponse.access_token)" }
 
     # Here an example for a request to an endpoint.
     # Get the id of the user in Azure AD
@@ -85,9 +92,9 @@ if ($tokenResponse.access_token) { # access token is available
     try {
         $webRequest = Invoke-RestMethod -Headers $graphApiHeader -Uri $getUserIdUri -Method Get -ContentType "application/json"
         $userId = $webRequest.id
-        Write-Host "User Id of $Username in Azure AD: $userId"
+        Write-Host "User Id of $($credUser.UserName) in Azure AD: $userId"
     } catch {
-        Write-Error "The request to Graph API wasn´s successful!"
+        Write-Error "The request to Graph API wasn`´t successful!"
         Write-Error $_.Exception.Message
     } # try .. catch: Get the id of the user in Azure AD
 } # if: access token is available
