@@ -15,10 +15,10 @@ First you have to prepare the body before you start requesting the access token.
 ``` PowerShell
 $reqTokenBody = @{
     Grant_Type    = "Password"
-    client_Id     = $ClientId
-    Client_Secret = $secret.GetNetworkCredential().Password
-    Username      = $UserName
-    Password      = $password.GetNetworkCredential().Password
+    client_Id     = $credAzureAplication.UserName
+    Client_Secret = $credAzureAplication.GetNetworkCredential().Password
+    Username      = $credUser.UserName
+    Password      = $credUser.GetNetworkCredential().Password
     Scope         = "https://graph.microsoft.com/.default"
 }
 ```
@@ -40,7 +40,7 @@ Uri of this request depends of your tenant name.
 If you was getting your response from Microsoft with your access token you have to prepare your header for your requests.
 
 ``` PowerShell
-$graphApiHeader = @{ Authorization = "Bearer $tokenResponse.access_token" }
+$graphApiHeader = @{ Authorization = "Bearer $($tokenResponse.access_token)" }
 ```
 
 Important: The access token is valid for one hour. When the time is over you have to request for a new access token!
